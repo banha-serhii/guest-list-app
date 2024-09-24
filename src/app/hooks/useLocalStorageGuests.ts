@@ -1,5 +1,3 @@
-"use client";
-
 import { useState, useEffect } from 'react';
 
 export interface Guest {
@@ -36,14 +34,14 @@ export const useLocalStorageGuests = () => {
 
   const togglePlusOne = (id: string) => {
     const updatedGuests = guests.map((guest) =>
-      guest.id === id ? { ...guest, plusOne: !guest.plusOne } : guest
+        guest.id === id ? { ...guest, plusOne: !guest.plusOne } : guest
     );
     saveGuests(updatedGuests);
   };
 
   const editGuest = (id: string, newName: string) => {
     const updatedGuests = guests.map((guest) =>
-      guest.id === id ? { ...guest, name: newName } : guest
+        guest.id === id ? { ...guest, name: newName } : guest
     );
     saveGuests(updatedGuests);
   };
@@ -53,5 +51,5 @@ export const useLocalStorageGuests = () => {
     saveGuests(updatedGuests);
   };
 
-  return { guests, addGuest, togglePlusOne, editGuest, deleteGuest };
+  return { guests, addGuest, togglePlusOne, editGuest, deleteGuest, setGuests };
 };

@@ -3,11 +3,15 @@
 import React from 'react';
 import AddGuestForm from './components/AddGuestForm';
 import GuestList from './components/GuestList';
-import { useLocalStorageGuests } from './hooks/useLocalStorageGuests';
+import { useLocalStorageGuests, Guest } from './hooks/useLocalStorageGuests';
 import ThemeToggle from './components/ThemeToggle';
 
 const Home: React.FC = () => {
-    const { guests, addGuest, togglePlusOne, editGuest, deleteGuest } = useLocalStorageGuests();
+    const { guests, addGuest, togglePlusOne, editGuest, deleteGuest, setGuests } = useLocalStorageGuests();
+
+    const updateGuestsOrder = (updatedGuests: Guest[]) => {
+        setGuests(updatedGuests);  // Оновлюємо порядок гостей і зберігаємо у localStorage
+    };
 
     return (
         <div className="container mx-auto p-4 min-h-screen">
@@ -21,6 +25,7 @@ const Home: React.FC = () => {
                 onTogglePlusOne={togglePlusOne}
                 onDelete={deleteGuest}
                 onEdit={editGuest}
+                updateGuestsOrder={updateGuestsOrder}  // Передаємо функцію для оновлення порядку
             />
         </div>
     );
