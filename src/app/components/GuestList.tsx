@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useRef } from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import GuestCard from './GuestCard';
-import { Guest } from '../hooks/useLocalStorageGuests';
+import {Guest} from '../hooks/useLocalStorageGuests';
 import {
     // FacebookShareButton,
-    TwitterShareButton, TelegramShareButton } from 'react-share';
-import { toPng } from 'html-to-image';
+    TwitterShareButton, TelegramShareButton, TwitterIcon, TelegramIcon
+} from 'react-share';
+import {toPng} from 'html-to-image';
 
 interface GuestListProps {
     guests: Guest[];
@@ -22,13 +23,17 @@ const GuestList: React.FC<GuestListProps> = ({
                                                  onDelete,
                                                  onEdit,
                                              }) => {
-    const totalGuests = guests.reduce((total, guest) => total + (guest.plusOne ? 2 : 1), 0);
-
+    const [shareUrl, setShareUrl] = useState(''); // Створюємо стан для зберігання URL
     const guestListRef = useRef<HTMLDivElement>(null);
 
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            setShareUrl(window.location.href);
+        }
+    }, []);
+    const totalGuests = guests.reduce((total, guest) => total + (guest.plusOne ? 2 : 1), 0);
 
-    const shareUrl = window.location.href;
-    const guestNames = guests.map(guest => guest.name).join(', ');
+    const guestNames = guests.map(guest => guest.name).join(',\n ');
 
     const handleDownloadImage = async () => {
         if (guestListRef.current) {
@@ -46,13 +51,15 @@ const GuestList: React.FC<GuestListProps> = ({
 
             <div className="flex space-x-4 mb-4">
                 {/*<FacebookShareButton url={shareUrl} title={`My guest list: ${guestNames}`}>*/}
-                {/*    <button className="bg-blue-600 text-white py-2 px-4 rounded">Share on Facebook</button>*/}
+                {/*    <span className="bg-blue-600 text-white py-2 px-4 rounded">Share on Facebook</span>*/}
                 {/*</FacebookShareButton>*/}
-                <TwitterShareButton url={shareUrl} title={`My guest list: ${guestNames}`}>
-                    <button className="bg-blue-400 text-white py-2 px-4 rounded">Share on Twitter</button>
+                <TwitterShareButton url={shareUrl}
+                                    title={`Total guests: ${totalGuests}\nMy guest list:\n${guestNames}`}>
+                    <TwitterIcon/>
                 </TwitterShareButton>
-                <TelegramShareButton url={shareUrl} title={`My guest list: ${guestNames}`}>
-                    <button className="bg-blue-700 text-white py-2 px-4 rounded">Share on Telegram</button>
+                <TelegramShareButton url={shareUrl}
+                                     title={`Total guests: ${totalGuests}\nMy guest list:\n${guestNames}`}>
+                    <TelegramIcon/>
                 </TelegramShareButton>
                 <button
                     onClick={handleDownloadImage}
