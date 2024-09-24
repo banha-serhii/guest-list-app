@@ -25,7 +25,6 @@ const Home: React.FC = () => {
                 onTogglePlusOne={togglePlusOne}
                 onDelete={deleteGuest}
                 onEdit={editGuest}
-                updateGuestsOrder={updateGuestsOrder}  // Передаємо функцію для оновлення порядку
             />
         </div>
     );
