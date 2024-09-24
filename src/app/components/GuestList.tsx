@@ -1,11 +1,12 @@
 "use client";
 
-import React from 'react';
+import React, { useRef } from 'react';
 import GuestCard from './GuestCard';
 import { Guest } from '../hooks/useLocalStorageGuests';
 import {
     // FacebookShareButton,
     TwitterShareButton, TelegramShareButton } from 'react-share';
+import { toPng } from 'html-to-image';
 
 interface GuestListProps {
     guests: Guest[];
@@ -23,8 +24,21 @@ const GuestList: React.FC<GuestListProps> = ({
                                              }) => {
     const totalGuests = guests.reduce((total, guest) => total + (guest.plusOne ? 2 : 1), 0);
 
-    const shareUrl = window.location.href; // Генеруємо URL для поточної сторінки
-    const guestNames = guests.map(guest => guest.name).join(', '); // Створюємо список імен гостей
+    const guestListRef = useRef<HTMLDivElement>(null);
+
+
+    const shareUrl = window.location.href;
+    const guestNames = guests.map(guest => guest.name).join(', ');
+
+    const handleDownloadImage = async () => {
+        if (guestListRef.current) {
+            const dataUrl = await toPng(guestListRef.current);
+            const link = document.createElement('a');
+            link.href = dataUrl;
+            link.download = 'guest-list.png';
+            link.click();
+        }
+    };
 
     return (
         <div>
@@ -40,9 +54,15 @@ const GuestList: React.FC<GuestListProps> = ({
                 <TelegramShareButton url={shareUrl} title={`My guest list: ${guestNames}`}>
                     <button className="bg-blue-700 text-white py-2 px-4 rounded">Share on Telegram</button>
                 </TelegramShareButton>
+                <button
+                    onClick={handleDownloadImage}
+                    className="bg-green-600 text-white py-2 px-4 rounded"
+                >
+                    Download Image
+                </button>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div ref={guestListRef} className="grid grid-cols-2 sm:grid-cols-2 gap-4  p-4 shadow rounded">
                 {guests.map((guest) => (
                     <GuestCard
                         key={guest.id}
