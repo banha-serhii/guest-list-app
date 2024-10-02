@@ -1,107 +1,73 @@
 "use client";
 
-import React, {useEffect, useRef, useState} from 'react';
-import GuestCard from './GuestCard';
-import {Guest} from '../hooks/useLocalStorageGuests';
-import {
-    // FacebookShareButton,
-    TwitterShareButton, TelegramShareButton, TwitterIcon, TelegramIcon
-} from 'react-share';
-import {toPng} from 'html-to-image';
+import React, { useState } from 'react';
+import { Guest } from '../hooks/useLocalStorageGuests';
 
-interface GuestListProps {
-    guests: Guest[];
+interface GuestCardProps {
+    guest: Guest;
     onTogglePlusOne: (id: string) => void;
     onDelete: (id: string) => void;
     onEdit: (id: string, newName: string) => void;
 }
 
-const GuestList: React.FC<GuestListProps> = ({
-                                                 guests = [],
-                                                 onTogglePlusOne,
-                                                 onDelete,
-                                                 onEdit,
-                                             }) => {
-    const [shareUrl, setShareUrl] = useState('');
-    const guestListRef = useRef<HTMLDivElement>(null);
+const GuestCard: React.FC<GuestCardProps> = ({ guest, onTogglePlusOne, onDelete, onEdit }) => {
+    const [isEditing, setIsEditing] = useState<boolean>(false);
+    const [editName, setEditName] = useState<string>(guest.name);
 
-    useEffect(() => {
-        if (typeof window !== 'undefined') {
-            setShareUrl(window.location.href);
-        }
-    }, []);
-    const totalGuests = guests.reduce((total, guest) => total + (guest.plusOne ? 2 : 1), 0);
-
-    const guestNames = guests.map(guest => guest.name).join(',\n');
-
-    const handleDownloadImage = async () => {
-        if (guestListRef.current) {
-            const dataUrl = await toPng(guestListRef.current);
-            const link = document.createElement('a');
-            link.href = dataUrl;
-            link.download = 'guest-list.png';
-            link.click();
+    const handleSave = () => {
+        if (editName.trim()) {
+            onEdit(guest.id, editName.trim());
+            setIsEditing(false);
+        } else {
+            alert("Name cannot be empty.");
         }
     };
 
     return (
-        <div className="flex flex-col min-h-screen justify-between">
-            <div>
-                {/* Умовне відображення заголовка */}
-                <h3 className="text-xl font-semibold mb-4 dark:text-white">
-                    {guests.length > 0 ? `Total Guests: ${guests.length}` : 'There is no guests'}
-                </h3>
-
-                <div ref={guestListRef} className="grid grid-cols-1 sm:grid-cols-2 gap-4 e p-4 shadow rounded">
-                    {guests.length > 0 ? (
-                        guests.map((guest) => (
-                            <GuestCard
-                                key={guest.id}
-                                guest={guest}
-                                onTogglePlusOne={onTogglePlusOne}
-                                onDelete={onDelete}
-                                onEdit={onEdit}
-                            />
-                        ))
-                    ) : (
-                        <div className="text-center text-gray-500 dark:text-gray-300">No guests yet. Please add
-                            some!</div>
-                    )}
-                </div>
+        <div className="p-4 bg-white dark:bg-gray-800 dark:text-white shadow rounded">
+            {isEditing ? (
+                <input
+                    className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded mb-2 bg-white dark:bg-gray-700"
+                    value={editName}
+                    onChange={(e) => setEditName(e.target.value)}
+                />
+            ) : (
+                <h4 className="text-lg font-semibold">{guest.name}</h4>
+            )}
+            <div className="flex items-center mt-2">
+                <input
+                    type="checkbox"
+                    checked={guest.plusOne}
+                    onChange={() => onTogglePlusOne(guest.id)}
+                    className="mr-2"
+                />
+                <span>+1</span>
             </div>
-            <div className="flex justify-center space-x-4 mt-4 mb-4">
-                {/*<FacebookShareButton url={shareUrl} title={`My guest list: ${guestNames}`}>*/}
-                {/*    <span className="bg-blue-600 text-white py-2 px-4 rounded">Share on Facebook</span>*/}
-                {/*</FacebookShareButton>*/}
-                <TwitterShareButton url={`Made with ${shareUrl}`}
-                                    title={`Total guests: ${totalGuests}\nMy guest list:\n${guestNames}`}>
-                    <TwitterIcon/>
-                </TwitterShareButton>
-                <TelegramShareButton url={`Made with ${shareUrl}`}
-                                     title={`Total guests: ${totalGuests}\nMy guest list:\n${guestNames}`}>
-                    <TelegramIcon/>
-                </TelegramShareButton>
+            <div className="mt-4 flex space-x-2">
+                {isEditing ? (
+                    <button
+                        onClick={handleSave}
+                        className="bg-green-500 text-white py-1 px-4 rounded hover:bg-green-600"
+                    >
+                        Save
+                    </button>
+                ) : (
+                    <button
+                        onClick={() => setIsEditing(true)}
+                        className="bg-yellow-500 text-white py-1 px-4 rounded hover:bg-yellow-600"
+                    >
+                        Edit
+                    </button>
+                )}
                 <button
-                    onClick={handleDownloadImage}
-                    className="bg-green-600 text-white py-2 px-4 rounded"
+                    onClick={() => onDelete(guest.id)}
+                    className="bg-red-500 text-white py-1 px-4 rounded hover:bg-red-600"
                 >
-                    Download Image
+                    Delete
                 </button>
             </div>
-
-            {/*<div ref={guestListRef} className="grid grid-cols-2 sm:grid-cols-2 gap-4  p-4 shadow rounded">*/}
-            {/*    {guests.map((guest) => (*/}
-            {/*        <GuestCard*/}
-            {/*            key={guest.id}*/}
-            {/*            guest={guest}*/}
-            {/*            onTogglePlusOne={onTogglePlusOne}*/}
-            {/*            onDelete={onDelete}*/}
-            {/*            onEdit={onEdit}*/}
-            {/*        />*/}
-            {/*    ))}*/}
-            {/*</div>*/}
         </div>
     );
 };
 
-export default GuestList;
+export default GuestCard;
