@@ -2,6 +2,8 @@
 
 import React, { useState } from 'react';
 import { Guest } from '../hooks/useLocalStorageGuests';
+import EditIcon from './EditIcon';
+import ActionButtons from './ActionButtons';
 
 interface GuestCardProps {
     guest: Guest;
@@ -24,7 +26,10 @@ const GuestCard: React.FC<GuestCardProps> = ({ guest, onTogglePlusOne, onDelete,
     };
 
     return (
-        <div className="p-4 bg-white dark:bg-gray-800 dark:text-white shadow rounded">
+        <div className="relative p-4 bg-white dark:bg-gray-800 dark:text-white shadow rounded">
+            {/* Іконка редагування */}
+            <EditIcon onClick={() => setIsEditing(!isEditing)} />
+
             {isEditing ? (
                 <input
                     className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded mb-2 bg-white dark:bg-gray-700"
@@ -34,6 +39,7 @@ const GuestCard: React.FC<GuestCardProps> = ({ guest, onTogglePlusOne, onDelete,
             ) : (
                 <h4 className="text-lg font-semibold">{guest.name}</h4>
             )}
+
             <div className="flex items-center mt-2">
                 <input
                     type="checkbox"
@@ -43,29 +49,9 @@ const GuestCard: React.FC<GuestCardProps> = ({ guest, onTogglePlusOne, onDelete,
                 />
                 <span>+1</span>
             </div>
-            <div className="mt-4 flex space-x-2">
-                {isEditing ? (
-                    <button
-                        onClick={handleSave}
-                        className="bg-green-500 text-white py-1 px-4 rounded hover:bg-green-600"
-                    >
-                        Save
-                    </button>
-                ) : (
-                    <button
-                        onClick={() => setIsEditing(true)}
-                        className="bg-yellow-500 text-white py-1 px-4 rounded hover:bg-yellow-600"
-                    >
-                        Edit
-                    </button>
-                )}
-                <button
-                    onClick={() => onDelete(guest.id)}
-                    className="bg-red-500 text-white py-1 px-4 rounded hover:bg-red-600"
-                >
-                    Delete
-                </button>
-            </div>
+
+            {/* Кнопки з'являються тільки під час редагування */}
+            {isEditing && <ActionButtons onSave={handleSave} onDelete={() => onDelete(guest.id)} />}
         </div>
     );
 };

@@ -10,8 +10,6 @@ import LanguageSwitcher from "@/app/components/LanguageSwitcher";
 const Home: React.FC = () => {
     const { guests, addGuest, togglePlusOne, editGuest, deleteGuest } = useLocalStorageGuests();
 
-
-
     return (
         <div className="container mx-auto p-4 min-h-screen">
             <div className="flex justify-between items-center mb-6">
