@@ -7,7 +7,7 @@ interface AddGuestFormProps {
 }
 
 const AddGuestForm: React.FC<AddGuestFormProps> = ({ onAdd }) => {
-    const [guestName, setGuestName] = useState('');
+    const [guestName, setGuestName] = useState<string>('');
 
     const handleSubmit = () => {
         if (guestName.trim()) {

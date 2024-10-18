@@ -1,0 +1,8 @@
+{
+  "add_guest": "Додати гостя",
+  "guest_name_placeholder": "Ім'я гостя",
+  "total_guests": "Загальна кількість гостей: {{count}}",
+  "no_guests": "Немає гостей",
+  "no_guests_yet": "Поки немає гостей. Додайте кількох!",
+  "download_image": "Завантажити зображення"
+}

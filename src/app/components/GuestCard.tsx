@@ -13,8 +13,8 @@ interface GuestCardProps {
 }
 
 const GuestCard: React.FC<GuestCardProps> = ({ guest, onTogglePlusOne, onDelete, onEdit }) => {
-    const [isEditing, setIsEditing] = useState(false);
-    const [editName, setEditName] = useState(guest.name);
+    const [isEditing, setIsEditing] = useState<boolean>(false);
+    const [editName, setEditName] = useState<string>(guest.name);
 
     const handleSave = () => {
         if (editName.trim()) {
