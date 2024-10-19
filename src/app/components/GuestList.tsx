@@ -1,13 +1,10 @@
 "use client";
 
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import GuestCard from './GuestCard';
-import {Guest} from '../hooks/useLocalStorageGuests';
-import {
-    // FacebookShareButton,
-    TwitterShareButton, TelegramShareButton, TwitterIcon, TelegramIcon
-} from 'react-share';
-import {toPng} from 'html-to-image';
+import { Guest } from '../hooks/useLocalStorageGuests';
+import { TwitterShareButton, TelegramShareButton, TwitterIcon, TelegramIcon } from 'react-share';
+import { toPng } from 'html-to-image';
 
 interface GuestListProps {
     guests: Guest[];
@@ -30,7 +27,12 @@ const GuestList: React.FC<GuestListProps> = ({
             setShareUrl(window.location.href);
         }
     }, []);
-    const totalGuests = guests.reduce((total, guest) => total + (guest.plusOne ? 2 : 1), 0);
+
+    // Правильний підрахунок загальної кількості гостей, включаючи +1
+    const totalGuests = guests.reduce(
+        (total, guest) => total + (guest.plusOne ? 2 : 1),
+        0
+    );
 
     const guestNames = guests.map(guest => guest.name).join(',\n');
 
@@ -49,10 +51,10 @@ const GuestList: React.FC<GuestListProps> = ({
             <div>
                 {/* Умовне відображення заголовка */}
                 <h3 className="text-xl font-semibold mb-4 dark:text-white">
-                    {guests.length > 0 ? `Total Guests: ${guests.length}` : 'There is no guests'}
+                    {guests.length > 0 ? `Total Guests: ${totalGuests}` : 'There are no guests'}
                 </h3>
 
-                <div ref={guestListRef} className="grid grid-cols-1 sm:grid-cols-2 gap-4 e p-4 shadow rounded">
+                <div ref={guestListRef} className="grid grid-cols-1 sm:grid-cols-2 gap-4  shadow rounded">
                     {guests.length > 0 ? (
                         guests.map((guest) => (
                             <GuestCard
@@ -64,22 +66,23 @@ const GuestList: React.FC<GuestListProps> = ({
                             />
                         ))
                     ) : (
-                        <div className="text-center text-gray-500 dark:text-gray-300">No guests yet. Please add
-                            some!</div>
+                        <div className="text-center text-gray-500 dark:text-gray-300">No guests yet. Please add some!</div>
                     )}
                 </div>
             </div>
+
             <div className="flex justify-center space-x-4 mt-4 mb-4">
-                {/*<FacebookShareButton url={shareUrl} title={`My guest list: ${guestNames}`}>*/}
-                {/*    <span className="bg-blue-600 text-white py-2 px-4 rounded">Share on Facebook</span>*/}
-                {/*</FacebookShareButton>*/}
-                <TwitterShareButton url={`Made with ${shareUrl}`}
-                                    title={`Total guests: ${totalGuests}\nMy guest list:\n${guestNames}`}>
-                    <TwitterIcon/>
+                <TwitterShareButton
+                    url={`Made with ${shareUrl}`}
+                    title={`Total guests: ${totalGuests}\nMy guest list:\n${guestNames}`}
+                >
+                    <TwitterIcon />
                 </TwitterShareButton>
-                <TelegramShareButton url={`Made with ${shareUrl}`}
-                                     title={`Total guests: ${totalGuests}\nMy guest list:\n${guestNames}`}>
-                    <TelegramIcon/>
+                <TelegramShareButton
+                    url={`Made with ${shareUrl}`}
+                    title={`Total guests: ${totalGuests}\nMy guest list:\n${guestNames}`}
+                >
+                    <TelegramIcon />
                 </TelegramShareButton>
                 <button
                     onClick={handleDownloadImage}
@@ -88,18 +91,6 @@ const GuestList: React.FC<GuestListProps> = ({
                     Download Image
                 </button>
             </div>
-
-            {/*<div ref={guestListRef} className="grid grid-cols-2 sm:grid-cols-2 gap-4  p-4 shadow rounded">*/}
-            {/*    {guests.map((guest) => (*/}
-            {/*        <GuestCard*/}
-            {/*            key={guest.id}*/}
-            {/*            guest={guest}*/}
-            {/*            onTogglePlusOne={onTogglePlusOne}*/}
-            {/*            onDelete={onDelete}*/}
-            {/*            onEdit={onEdit}*/}
-            {/*        />*/}
-            {/*    ))}*/}
-            {/*</div>*/}
         </div>
     );
 };
