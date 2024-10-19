@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import './globals.css';
-import '../i18n'; // Імпортуємо i18n для ініціалізації перекладів
 
 const geistSans = localFont({
     src: './fonts/GeistVF.woff',

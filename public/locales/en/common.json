@@ -1,8 +1,0 @@
-{
-  "add_guest": "Add Guest",
-  "guest_name_placeholder": "Guest name",
-  "total_guests": "Total Guests: {{count}}",
-  "no_guests": "There is no guests",
-  "no_guests_yet": "No guests yet. Please add some!",
-  "download_image": "Download Image"
-}
