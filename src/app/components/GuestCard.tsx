@@ -26,10 +26,8 @@ const GuestCard: React.FC<GuestCardProps> = ({ guest, onTogglePlusOne, onDelete,
     };
 
     return (
-        <div className="relative p-4 bg-white dark:bg-gray-800 dark:text-white shadow rounded">
-            {/* Іконка редагування */}
+        <div className="relative p-4 pr-8 bg-white dark:bg-gray-800 dark:text-white shadow rounded">
             <EditIcon onClick={() => setIsEditing(!isEditing)} />
-
             {isEditing ? (
                 <input
                     className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded mb-2 bg-white dark:bg-gray-700"
@@ -39,7 +37,6 @@ const GuestCard: React.FC<GuestCardProps> = ({ guest, onTogglePlusOne, onDelete,
             ) : (
                 <h4 className="text-lg font-semibold">{guest.name}</h4>
             )}
-
             <div className="flex items-center mt-2">
                 <input
                     type="checkbox"
@@ -49,9 +46,9 @@ const GuestCard: React.FC<GuestCardProps> = ({ guest, onTogglePlusOne, onDelete,
                 />
                 <span>+1</span>
             </div>
-
-            {/* Кнопки з'являються тільки під час редагування */}
-            {isEditing && <ActionButtons onSave={handleSave} onDelete={() => onDelete(guest.id)} />}
+            {isEditing && (
+                <ActionButtons onSave={handleSave} onDelete={() => onDelete(guest.id)} />
+            )}
         </div>
     );
 };
